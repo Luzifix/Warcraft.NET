@@ -63,7 +63,7 @@ namespace Warcraft.NET.Files.ADT.Terrain.Wotlk
         /// <summary>
         /// Gets or sets the the texture flags. This chunk is present in WOTLK chunks and above.
         /// </summary>
-        [ChunkOrder(100)]
+        [ChunkOrder(100), ChunkOptional]
         public MTFX TextureFlags { get; set; }
 
         /// <summary>
