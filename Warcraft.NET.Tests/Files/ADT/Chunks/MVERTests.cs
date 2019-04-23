@@ -20,6 +20,7 @@ namespace Warcraft.NET.Tests.Files.ADT.Chunks
             byte[] dataWithoutSignature = adt.Skip(0x4).ToArray();
             mver.LoadBinaryData(dataWithoutSignature);
 
+            // Assert
             Assert.AreEqual(mver.Version, (uint)4);
         }
 
