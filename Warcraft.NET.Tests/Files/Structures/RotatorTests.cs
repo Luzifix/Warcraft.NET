@@ -12,26 +12,34 @@ namespace Warcraft.NET.Tests.Files.Structures
         public void ToString()
         {
             // Arrage
-            var rotator = new Rotator(.1f, .2f, .3f);
+            float Pitch = .1f;
+            float Yaw = .2f;
+            float Roll = .3f;
+
+            Rotator rotator = new Rotator(Pitch, Yaw, Roll);
 
             // Act
             string result = rotator.ToString();
 
             // Assert
-            Assert.AreEqual(result, "Pitch: 0,1, Yaw: 0,2, Roll: 0,3");
+            Assert.AreEqual(result, $"Pitch: {Pitch}, Yaw: {Yaw}, Roll: {Roll}");
         }
 
         [TestMethod]
         public void Flatten()
         {
             // Arrage
-            var rotator = new Rotator(.1f, .2f, .3f);
+            float Pitch = .1f;
+            float Yaw = .2f;
+            float Roll = .3f;
+
+            var rotator = new Rotator(Pitch, Yaw, Roll);
 
             // Act
             float[] result = rotator.Flatten().ToArray();
 
             // Assert
-            CollectionAssert.AreEqual(result, new float[] { 0.1f, 0.2f, 0.3f });
+            CollectionAssert.AreEqual(result, new float[] { Pitch, Yaw, Roll });
         }
     }
 }
