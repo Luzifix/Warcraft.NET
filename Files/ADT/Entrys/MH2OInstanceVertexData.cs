@@ -7,11 +7,11 @@ namespace Warcraft.NET.Files.ADT.Entrys
         /// <summary>
         /// Gets or sets the height map.
         /// </summary>
-        public float[,] HeightMap { get; set; } = new float[8, 8];
+        public float[,] HeightMap { get; set; } = new float[0, 0];
         /// <summary>
         /// Gets or sets the depth map.
         /// </summary>
-        public byte[,] DepthMap { get; set; } = new byte[8, 8];
+        public byte[,] DepthMap { get; set; } = new byte[0, 0];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MH2OInstanceVertexData"/> class.
@@ -20,19 +20,21 @@ namespace Warcraft.NET.Files.ADT.Entrys
         /// <param name="instance"></param>
         public MH2OInstanceVertexData(byte[] inData, MH2OInstance instance)
         {
+            HeightMap = new float[instance.Height + 1, instance.Width + 1];
+            DepthMap = new byte[instance.Height + 1, instance.Width + 1];
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
                 if (instance.LiquidObjectOrVertexFormat != 2)
                 {
-                    for (byte z = instance.OffsetY; z < instance.Height + instance.OffsetY; z++)
-                        for (byte x = instance.OffsetX; x < instance.Width + instance.OffsetX; x++)
-                            HeightMap[z, x] = br.ReadSingle();
+                    for (byte y = 0; y < instance.Height + instance.OffsetY; y++)
+                        for (byte x = 0; x < instance.Width + instance.OffsetX; x++)
+                            HeightMap[y, x] = br.ReadSingle();
                 }
 
-                for (byte z = instance.OffsetY; z < instance.Height + instance.OffsetY; z++)
-                    for (byte x = instance.OffsetX; x < instance.Width + instance.OffsetX; x++)
-                        DepthMap[z, x] = br.ReadByte();
+                for (byte y = 0; y < instance.Height + 1; y++)
+                    for (byte x = 0; x < instance.Width + 1; x++)
+                        DepthMap[y, x] = br.ReadByte();
             }
         }
 
@@ -40,9 +42,9 @@ namespace Warcraft.NET.Files.ADT.Entrys
         /// Gets the size of an entry.
         /// </summary>
         /// <returns>The size.</returns>
-        public static int GetSize()
+        public static int GetSize(MH2OInstance instance)
         {
-            return sizeof(float) * 64 + sizeof(byte) * 64;
+            return sizeof(float) * (instance.Height + 1) * (instance.Width + 1) + sizeof(byte) * (instance.Height + 1) * (instance.Width + 1);
         }
 
         /// <inheritdoc/>
@@ -53,13 +55,13 @@ namespace Warcraft.NET.Files.ADT.Entrys
             {
                 if (instance.LiquidObjectOrVertexFormat != 2)
                 {
-                    for (byte y = instance.OffsetY; y < instance.Height + instance.OffsetY; y++)
-                        for (byte x = instance.OffsetX; x < instance.Width + instance.OffsetX; x++)
+                    for (byte y = 0; y < instance.Height + 1; y++)
+                        for (byte x = 0; x < instance.Width + 1; x++)
                             bw.Write(HeightMap[y, x]);
                 }
 
-                for (byte y = instance.OffsetY; y < instance.Height + instance.OffsetY; y++)
-                    for (byte x = instance.OffsetX; x < instance.Width + instance.OffsetX; x++)
+                for (byte y = 0; y < instance.Height + 1; y++)
+                    for (byte x = 0; x < instance.Width + 1; x++)
                         bw.Write(DepthMap[y, x]);
 
                 return ms.ToArray();

@@ -50,7 +50,7 @@ namespace Warcraft.NET.Files.ADT.Chunks
                     if (instance.RenderBitmapBytes.Length == (instance.Width * instance.Height + 7) / 8)
                         size += instance.RenderBitmapBytes.Length;
                     if (instance.VertexData != null)
-                        size += MH2OInstanceVertexData.GetSize();
+                        size += MH2OInstanceVertexData.GetSize(instance);
                 }
             }
             return (uint)size;
@@ -94,7 +94,7 @@ namespace Warcraft.NET.Files.ADT.Chunks
                             if (instance.OffsetVertexData > 0)
                             {
                                 br.BaseStream.Position = instance.OffsetVertexData;
-                                instance.VertexData = new MH2OInstanceVertexData(br.ReadBytes(MH2OInstanceVertexData.GetSize()), instance);
+                                instance.VertexData = new MH2OInstanceVertexData(br.ReadBytes(MH2OInstanceVertexData.GetSize(instance)), instance);
                             }
                         }
                     }
@@ -112,6 +112,12 @@ namespace Warcraft.NET.Files.ADT.Chunks
                 bw.Seek(256 * MH2OHeader.GetSize(), SeekOrigin.Begin);
 
                 // Write MH2O instances later when we got the offsets
+                foreach (var header in MH2OHeaders)
+                {
+                    header.OffsetInstances = (uint)bw.BaseStream.Position;
+                    bw.Seek(MH2OInstance.GetSize() * header.Instances.Length, SeekOrigin.Current);
+                }
+
                 foreach (var header in MH2OHeaders)
                 {
                     header.LayerCount = (uint)header.Instances.Length;
@@ -146,17 +152,20 @@ namespace Warcraft.NET.Files.ADT.Chunks
                             header.OffsetAttributes = (uint)bw.BaseStream.Position;
                             bw.Write(header.Attributes.Serialize());
                         }
-
-                        // Write MH2O instances
-                        header.OffsetInstances = (uint)bw.BaseStream.Position;
-                        foreach (var instance in header.Instances)
-                            bw.Write(instance.Serialize());
                     }
                     else
                     {
                         header.OffsetAttributes = 0;
                         header.OffsetInstances = 0;
                     }
+                }
+
+                // Write MH2O instance data
+                foreach (var header in MH2OHeaders)
+                {
+                    bw.BaseStream.Position = header.OffsetInstances;
+                    foreach (var instance in header.Instances)
+                        bw.Write(instance.Serialize());
                 }
 
                 // Write MH2O header data
