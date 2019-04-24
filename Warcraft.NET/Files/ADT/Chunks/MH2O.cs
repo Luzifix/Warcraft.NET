@@ -4,8 +4,14 @@ using Warcraft.NET.Files.ADT.Entrys;
 
 namespace Warcraft.NET.Files.ADT.Chunks
 {
+    /// <summary>
+    /// MH2O Chunk - Contains all informations about liquids on the chunk.
+    /// </summary>
     public class MH2O : IIFFChunk, IBinarySerializable
     {
+        /// <summary>
+        /// Holds the binary chunk signature.
+        /// </summary>
         public const string Signature = "MH2O";
 
         /// <summary>
@@ -13,9 +19,11 @@ namespace Warcraft.NET.Files.ADT.Chunks
         /// </summary>
         public MH2OHeader[] MH2OHeaders { get; set; } = new MH2OHeader[256];
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MH2O"/> class.
+        /// </summary>
         public MH2O()
         {
-
         }
 
         /// <summary>
@@ -36,24 +44,7 @@ namespace Warcraft.NET.Files.ADT.Chunks
         /// <inheritdoc/>
         public uint GetSize()
         {
-            int size = MH2OHeader.GetSize() * 256;
-
-            foreach (var header in MH2OHeaders)
-            {
-                if (header.Attributes != null && !header.Attributes.HasOnlyZeroes)
-                    size += MH2OAttribute.GetSize();
-
-                foreach (var instance in header.Instances)
-                {
-                    size += MH2OInstance.GetSize();
-
-                    if (instance.RenderBitmapBytes.Length == (instance.Width * instance.Height + 7) / 8)
-                        size += instance.RenderBitmapBytes.Length;
-                    if (instance.VertexData != null)
-                        size += MH2OInstanceVertexData.GetSize(instance);
-                }
-            }
-            return (uint)size;
+            return (uint)Serialize().Length;
         }
 
         /// <inheritdoc/>

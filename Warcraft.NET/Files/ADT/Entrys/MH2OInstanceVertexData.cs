@@ -4,6 +4,9 @@ using Warcraft.NET.Files.Structures;
 
 namespace Warcraft.NET.Files.ADT.Entrys
 {
+    /// <summary>
+    /// Contains informations about the vertex data in the current MH2O instance subchunk.
+    /// </summary>
     public class MH2OInstanceVertexData
     {
         /// <summary>

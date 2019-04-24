@@ -2,52 +2,66 @@
 
 namespace Warcraft.NET.Files.ADT.Entrys
 {
+    /// <summary>
+    /// Contains informations about the liquids on the current subchunk.
+    /// </summary>
     public class MH2OInstance
     {
         /// <summary>
         /// Gets or sets the liquid type.
         /// </summary>
         public ushort LiquidTypeId { get; set; }
+
         /// <summary>
         /// Gets or sets the liquid vertex format.
         /// </summary>
         public ushort LiquidObjectOrVertexFormat { get; set; }
+
         /// <summary>
         /// Gets or sets the minimum height level.
         /// </summary>
         public float MinHeightLevel { get; set; }
+
         /// <summary>
         /// Gets or sets the maximum height level.
         /// </summary>
         public float MaxHeightLevel { get; set; }
+
         /// <summary>
         /// Gets or sets the X axis offset.
         /// </summary>
         public byte OffsetX { get; set; }
+
         /// <summary>
         /// Gets or sets the Y axis offset.
         /// </summary>
         public byte OffsetY { get; set; }
+
         /// <summary>
         /// Gets or sets the width.
         /// </summary>
         public byte Width { get; set; }
+
         /// <summary>
         /// Gets or sets the height.
         /// </summary>
         public byte Height { get; set; }
+
         /// <summary>
         /// Gets or sets the offset of ExistsBitmap.
         /// </summary>
         public uint OffsetExistsBitmap { get; set; }
+
         /// <summary>
         /// Gets or sets the offset of the vertex data.
         /// </summary>
         public uint OffsetVertexData { get; set; }
+
         /// <summary>
         /// Gets or sets the render bitmap bytes.
         /// </summary>
         public byte[] RenderBitmapBytes { get; set; }
+
         /// <summary>
         /// Gets or sets the <see cref="MH2OInstanceVertexData"/> of the current <see cref="MH2OInstance"/>.
         /// </summary>

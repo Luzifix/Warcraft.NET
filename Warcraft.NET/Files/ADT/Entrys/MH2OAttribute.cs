@@ -9,6 +9,7 @@ namespace Warcraft.NET.Files.ADT.Entrys
         /// Seems to be useable as visibility information
         /// </summary>
         public byte[] Fishable { get; set; } = new byte[8];
+
         /// <summary>
         /// Gets or sets the deepness.
         /// </summary>
