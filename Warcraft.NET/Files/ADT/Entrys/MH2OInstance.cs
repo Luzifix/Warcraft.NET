@@ -92,9 +92,8 @@ namespace Warcraft.NET.Files.ADT.Entrys
             {
                 bw.Write(LiquidTypeId);
                 if (OffsetVertexData == 0 && LiquidTypeId != 2)
-                    bw.Write((ushort)2);
-                else
-                    bw.Write(LiquidObjectOrVertexFormat);
+                    LiquidObjectOrVertexFormat = 2;
+                bw.Write(LiquidObjectOrVertexFormat);
                 bw.Write(MinHeightLevel);
                 bw.Write(MaxHeightLevel);
                 bw.Write(OffsetX);
