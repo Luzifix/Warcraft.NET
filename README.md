@@ -1,4 +1,4 @@
-# Warcraft.NET
+# Warcraft.NET TEST houndci
 [![Build status](https://ci.appveyor.com/api/projects/status/ojd6net49mel2hs5/branch/master?svg=true)](https://ci.appveyor.com/project/Luzifix/warcraft-net/branch/master)
 
 ## About
