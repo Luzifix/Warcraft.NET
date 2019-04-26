@@ -5,7 +5,14 @@ using Warcraft.NET.Files.ADT.Chunks.Wotlk;
 namespace Warcraft.NET.Files.ADT.Terrain.Wotlk
 {
     public class Terrain : TerrainBase
-    {       
+    {
+        /// <summary>
+        /// Gets or sets the contains the ADT Header with offsets. The header has offsets to the other chunks in the
+        /// ADT.
+        /// </summary>
+        [ChunkOrder(2)]
+        public MHDR Header { get; set; }
+
         /// <summary>
         /// Gets or sets the contains a list of all textures referenced by this ADT.
         /// </summary>
@@ -57,8 +64,15 @@ namespace Warcraft.NET.Files.ADT.Terrain.Wotlk
         /// <summary>
         /// Gets or sets the water informations in this ADT.
         /// </summary>
-        [ChunkOrder(10)]
+        [ChunkOrder(10), ChunkOptional]
         public MH2O Water { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contains the ADT bounding box
+        /// ADT.
+        /// </summary>
+        [ChunkOrder(99), ChunkOptional]
+        public MFBO BoundingBox { get; set; }
 
         /// <summary>
         /// Gets or sets the the texture flags. This chunk is present in WOTLK chunks and above.
