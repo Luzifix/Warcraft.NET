@@ -79,7 +79,7 @@ namespace Warcraft.NET.Files.ADT.Chunks
                             if (instance.OffsetExistsBitmap > 0)
                             {
                                 br.BaseStream.Position = instance.OffsetExistsBitmap;
-                                instance.RenderBitmapBytes = br.ReadBytes((instance.Width * instance.Height + 7) / 8);
+                                instance.RenderBitmapBytes = br.ReadBytes(((instance.Width * instance.Height) + 7) / 8);
                             }
 
                             if (instance.OffsetVertexData > 0)
@@ -114,34 +114,12 @@ namespace Warcraft.NET.Files.ADT.Chunks
                     header.LayerCount = (uint)header.Instances.Length;
                     if (header.LayerCount > 0)
                     {
-                        // Write MH2O attributes
-                        if (header.Attributes is null)
-                            header.OffsetAttributes = 0;
-                        else
-                        {
-                            header.OffsetAttributes = (uint)bw.BaseStream.Position;
-                            bw.Write(header.Attributes.Serialize());
-                        }
+                        WriteAttributes(bw, header);
 
                         foreach (var instance in header.Instances)
                         {
-                            // Don't write RenderBitmapBytes when the length is incorrect
-                            if (instance.RenderBitmapBytes != null && instance.RenderBitmapBytes.Length == (instance.Width * instance.Height + 7) / 8)
-                            {
-                                instance.OffsetExistsBitmap = (uint)bw.BaseStream.Position;
-                                bw.Write(instance.RenderBitmapBytes);
-                            }
-                            else
-                                instance.OffsetExistsBitmap = 0;
-
-                            // Write MH2O instance subdata
-                            if (instance.VertexData is null)
-                                instance.OffsetVertexData = 0;
-                            else
-                            {
-                                instance.OffsetVertexData = (uint)bw.BaseStream.Position;
-                                bw.Write(instance.VertexData.Serialize(instance));
-                            }
+                            WriteRenderBitmapBytes(bw, instance);
+                            WriteVertexData(bw, instance);
                         }
                     }
                     else
@@ -165,6 +143,55 @@ namespace Warcraft.NET.Files.ADT.Chunks
                     bw.Write(header.Serialize());
 
                 return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Writes the MH2O header attributes or sets the offset to 0 if they can be omitted.
+        /// </summary>
+        /// <param name="bw"></param>
+        /// <param name="header"></param>
+        private void WriteAttributes(BinaryWriter bw, MH2OHeader header)
+        {
+            if (header.Attributes is null)
+                header.OffsetAttributes = 0;
+            else
+            {
+                header.OffsetAttributes = (uint)bw.BaseStream.Position;
+                bw.Write(header.Attributes.Serialize());
+            }
+        }
+
+        /// <summary>
+        /// Writes the MH2O instance render bitmap bytes or sets the offset to 0 if they can be omitted.
+        /// </summary>
+        /// <param name="bw"></param>
+        /// <param name="instance"></param>
+        private void WriteRenderBitmapBytes(BinaryWriter bw, MH2OInstance instance)
+        {
+            // Don't write RenderBitmapBytes when the length is incorrect
+            if ((instance.RenderBitmapBytes != null) && (instance.RenderBitmapBytes.Length == ((instance.Width * instance.Height) + 7) / 8))
+            {
+                instance.OffsetExistsBitmap = (uint)bw.BaseStream.Position;
+                bw.Write(instance.RenderBitmapBytes);
+            }
+            else
+                instance.OffsetExistsBitmap = 0;
+        }
+
+        /// <summary>
+        /// Writes the MH2O instance vertex data or sets the offset to 0 if they can be omitted.
+        /// </summary>
+        /// <param name="bw"></param>
+        /// <param name="instance"></param>
+        private void WriteVertexData(BinaryWriter bw, MH2OInstance instance)
+        {
+            if (instance.VertexData is null)
+                instance.OffsetVertexData = 0;
+            else
+            {
+                instance.OffsetVertexData = (uint)bw.BaseStream.Position;
+                bw.Write(instance.VertexData.Serialize(instance));
             }
         }
     }

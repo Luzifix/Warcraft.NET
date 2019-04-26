@@ -95,7 +95,7 @@ namespace Warcraft.NET.Files.ADT.Entrys
         /// <returns>The size.</returns>
         public static int GetSize()
         {
-            return sizeof(ushort) * 2 + sizeof(float) * 2 + sizeof(byte) * 4 + sizeof(uint) * 2;
+            return (sizeof(ushort) * 2) + (sizeof(float) * 2) + (sizeof(byte) * 4) + (sizeof(uint) * 2);
         }
 
         /// <inheritdoc/>
