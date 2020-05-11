@@ -6,32 +6,32 @@ using System.IO;
 namespace Warcraft.NET.Files.ADT.Chunks.Legion
 {
     /// <summary>
-    /// MLDX Chunk - Contains model bounding information.
+    /// MLMD Chunk - Contains wmo placement information like <see cref="MODF"/> without extens
     /// </summary>
-    public class MLDX : IIFFChunk, IBinarySerializable
+    public class MLMD : IIFFChunk, IBinarySerializable
     {
         /// <summary>
         /// Holds the binary chunk signature.
         /// </summary>
-        public const string Signature = "MLDX";
+        public const string Signature = "MLMD";
 
         /// <summary>
         /// Gets or sets model extents.
         /// </summary>
-        public List<MLDXEntry> Entries { get; set; } = new List<MLDXEntry>();
+        public List<MLMDEntry> Entries { get; set; } = new List<MLMDEntry>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MLDX"/> class.
+        /// Initializes a new instance of the <see cref="MLMD"/> class.
         /// </summary>
-        public MLDX()
+        public MLMD()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MLDX"/> class.
+        /// Initializes a new instance of the <see cref="MLMD"/> class.
         /// </summary>
         /// <param name="inData">ExtendedData.</param>
-        public MLDX(byte[] inData)
+        public MLMD(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -42,11 +42,11 @@ namespace Warcraft.NET.Files.ADT.Chunks.Legion
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                var entryCount = br.BaseStream.Length / MLDXEntry.GetSize();
+                var entryCount = br.BaseStream.Length / MLMDEntry.GetSize();
 
                 for (var i = 0; i < entryCount; ++i)
                 {
-                    Entries.Add(new MLDXEntry(br.ReadBytes(MLDXEntry.GetSize())));
+                    Entries.Add(new MLMDEntry(br.ReadBytes(MLMDEntry.GetSize())));
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace Warcraft.NET.Files.ADT.Chunks.Legion
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                foreach (MLDXEntry entry in Entries)
+                foreach (MLMDEntry entry in Entries)
                 {
                     bw.Write(entry.Serialize());
                 }
